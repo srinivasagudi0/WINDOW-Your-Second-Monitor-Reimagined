@@ -1,37 +1,82 @@
 import * as THREE from 'three';
 
+// 1. Create the 3D scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('skyblue');
 
+// 2. Create the camera
 const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 100);
-camera.position.set(0, 8, 12);
-camera.lookAt(0, 0, 0);
 
-const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(100, 100),
-    new THREE.MeshStandardMaterial({
-        color: 0x3b7a26,
-        side: THREE.DoubleSide
-    })
-);
-ground.rotation.x = -Math.PI / 2;
-scene.add(ground);
-
-const sunlight = new THREE.DirectionalLight(0xffffff, 2);
-sunlight.position.set(5, 10, 5);
-scene.add(sunlight);
-
-scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+// 3. Connect Three.js to the HTML canvas
 const canvas = document.getElementById('canvas');
 
 const renderer = new THREE.WebGLRenderer({
-    canvas,
+    canvas: canvas,
     antialias: true
 });
 
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// 5. Make the scene responsive
+// 4. Load the 360° forest image
+const loader = new THREE.TextureLoader();
+
+loader.load(
+    'assets/environments/nature_reserve_forest_4k.jpeg',
+
+    function(texture) {
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        scene.background = texture;
+    },
+
+    undefined,
+
+    function(error) {
+        console.error("Failed to load forest image:", error);
+    }
+);
+
+// 5. Mouse controls
+let dragging = false;
+let previousX = 0;
+let previousY = 0;
+
+let yaw = 0;
+let pitch = 0;
+
+canvas.addEventListener('pointerdown', function(event) {
+    dragging = true;
+
+    previousX = event.clientX;
+    previousY = event.clientY;
+
+    canvas.setPointerCapture(event.pointerId);
+});
+
+canvas.addEventListener('pointerup', function() {
+    dragging = false;
+});
+
+canvas.addEventListener('pointercancel', function() {
+    dragging = false;
+});
+
+canvas.addEventListener('pointermove', function(event) {
+    if (!dragging) return;
+
+    yaw -= (event.clientX - previousX) * 0.004;
+    pitch -= (event.clientY - previousY) * 0.004;
+
+    pitch = THREE.MathUtils.clamp(
+        pitch,
+        -Math.PI / 2 + 0.05,
+        Math.PI / 2 - 0.05
+    );
+
+    previousX = event.clientX;
+    previousY = event.clientY;
+});
+
+// 6. Make the canvas responsive
 function resize() {
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
@@ -47,9 +92,15 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-// 6. Animate the cube
+// 7. Render the environment
 function animate() {
+    camera.rotation.order = 'YXZ';
+
+    camera.rotation.y = yaw;
+    camera.rotation.x = pitch;
+
     renderer.render(scene, camera);
+
     requestAnimationFrame(animate);
 }
 
