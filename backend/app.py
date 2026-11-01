@@ -3,6 +3,7 @@ import uuid
 import base64
 from pathlib import Path
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from openai import OpenAI
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -12,6 +13,11 @@ app = Flask(
     static_folder=str(ROOT),
     static_url_path=""
 )
+
+# Keep CORS restricted to the deployed static frontend. Set ALLOWED_ORIGIN in
+# Render to the exact Vercel URL (including https:// and no trailing slash).
+allowed_origin = os.getenv("ALLOWED_ORIGIN", "http://localhost:8000")
+CORS(app, resources={r"/generate": {"origins": allowed_origin}})
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -68,9 +74,10 @@ def generate():
         filepath = OUTPUT_DIR / filename
         filepath.write_bytes(image_bytes)
 
+        backend_url = os.getenv("BACKEND_PUBLIC_URL", request.url_root.rstrip("/"))
         return jsonify({
             "success": True,
-            "image_url": f"/assets/generated/{filename}"
+            "image_url": f"{backend_url}/assets/generated/{filename}"
         })
 
     except Exception:

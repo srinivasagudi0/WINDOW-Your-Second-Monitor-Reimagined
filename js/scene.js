@@ -3,6 +3,12 @@ const image = document.getElementById("generated-landscape");
 
 if (imageUrl) {
     image.src = imageUrl;
+    image.addEventListener("error", () => {
+        image.removeAttribute("src");
+        alert("The generated image could not be loaded. Please generate a new window.");
+        localStorage.removeItem("windowImageUrl");
+        window.location.href = "index.html";
+    }, { once: true });
 } else {
     alert("No generated image found.");
     window.location.href = "index.html";

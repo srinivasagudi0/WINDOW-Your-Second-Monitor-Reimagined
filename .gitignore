@@ -1,0 +1,6 @@
+.env
+.env.*
+__pycache__/
+*.py[cod]
+assets/generated/*
+!assets/generated/.gitkeep

@@ -1,4 +1,5 @@
 const openWindowButton = document.getElementById("open-window");
+const API_BASE_URL = "https://window-your-second-monitor-reimagined.onrender.com";
 
 openWindowButton.addEventListener("click", async () => {
     const preferences = {
@@ -12,14 +13,14 @@ openWindowButton.addEventListener("click", async () => {
     openWindowButton.disabled = true;
     openWindowButton.textContent = "Generating...";
     try {
-        const response = await fetch("/generate", {
+        const response = await fetch(`${API_BASE_URL}/generate`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(preferences)
         });
-        const result = await response.json();
+        const result = await response.json().catch(() => ({}));
         if (!response.ok) {
             throw new Error(result.error || "Generation failed");
         }
