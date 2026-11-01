@@ -34,3 +34,7 @@ def generate():
     (output_dir / filename).write_bytes(image_bytes)
 
     return jsonify({"image_url": f"/assets/generated/{filename}"})
+
+
+if __name__ == "__main__":
+    app.run()

@@ -16,12 +16,13 @@ openWindowButton.addEventListener("click", async () => {
         },
         body: JSON.stringify(preferences)
     });
+    const result = await response.json();
 
     if (!response.ok) {
         alert(result.error || "An error occurred while generating the window.");
         return;
     }
-    localStorage.setItem("windowImageUrl", result.imageUrl);
+    localStorage.setItem("windowImageUrl", result.image_url);
     window.location.href = "scene.html";
 
 });
