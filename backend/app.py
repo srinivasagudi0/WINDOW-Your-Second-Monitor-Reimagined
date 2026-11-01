@@ -13,7 +13,7 @@ app = Flask(
     static_url_path=""
 )
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 OUTPUT_DIR = ROOT / "assets" / "generated"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -46,7 +46,7 @@ def generate():
         No people, no text, no window frame.
         """
         result = client.images.generate(
-            model="gpt-image-1",
+            model="gpt-image-1.5",
             prompt=prompt,
             size="1536x1024",
             quality="medium"
@@ -57,7 +57,7 @@ def generate():
         filename = f"{uuid.uuid4().hex}.png"
         filepath = OUTPUT_DIR / filename
         filepath.write_bytes(image_bytes)
-        
+
         return jsonify({
             "success": True,
             "image_url": f"/assets/generated/{filename}"
