@@ -24,6 +24,4 @@ openWindowButton.addEventListener("click", async () => {
     localStorage.setItem("windowImageUrl", result.imageUrl);
     window.location.href = "scene.html";
 
-    const result = await response.json();
-    window.location.href = "scene.html";
 });
