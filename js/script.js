@@ -1,6 +1,6 @@
 const openWindowButton = document.getElementById("open-window");
 
-openWindowButton.addEventListener("click", () => {
+openWindowButton.addEventListener("click", async () => {
     const preferences = {
         scenery: document.getElementById("scenery").value,
         time: document.getElementById("time").value,
@@ -9,6 +9,21 @@ openWindowButton.addEventListener("click", () => {
     };
 
     localStorage.setItem("windowPreferences", JSON.stringify(preferences));
+    const response = await fetch("/generate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(preferences)
+    });
 
+    if (!response.ok) {
+        alert(result.error || "An error occurred while generating the window.");
+        return;
+    }
+    localStorage.setItem("windowImageUrl", result.imageUrl);
+    window.location.href = "scene.html";
+
+    const result = await response.json();
     window.location.href = "scene.html";
 });
