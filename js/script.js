@@ -7,22 +7,37 @@ openWindowButton.addEventListener("click", async () => {
         weather: document.getElementById("weather").value,
         frame: document.getElementById("frame-type").value
     };
+    openWindowButton.disabled = true;
+    openWindowButton.textContent = "Generating...";
+    try {
+        const response = await fetch("/generate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(preferences)
+        });
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.error || "Generation failed");
+        }
+        localStorage.setItem(
+            "windowPreferences",
+            JSON.stringify(preferences)
+        );
+        localStorage.setItem(
+            "windowImageUrl",
+            result.image_url
+        );
+        window.location.href = "scene.html";
 
-    localStorage.setItem("windowPreferences", JSON.stringify(preferences));
-    const response = await fetch("/generate", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(preferences)
-    });
-    const result = await response.json();
+    } catch (error) {
 
-    if (!response.ok) {
-        alert(result.error || "An error occurred while generating the window.");
-        return;
+        console.error(error);
+        alert(error.message);
+
+        openWindowButton.disabled = false;
+        openWindowButton.textContent = "Open My Window";
     }
-    localStorage.setItem("windowImageUrl", result.image_url);
-    window.location.href = "scene.html";
 
 });
