@@ -32,6 +32,16 @@ def generate():
         time = str(data.get("time", "evening"))[:60]
         weather = str(data.get("weather", "sunny"))[:60]
 
+        width = int(data.get("width", 1920))
+        height = int(data.get("height", 1080))
+        aspect_ratio = width / max(height, 1)
+        if aspect_ratio > 1.2:
+            image_size = "1536x1024"
+        elif aspect_ratio < 0.8:
+            image_size = "1024x1536"
+        else:
+            image_size = "1024x1024"
+
         prompt = f"""
         Create a photorealistic cinematic landscape.
 
@@ -48,7 +58,7 @@ def generate():
         result = client.images.generate(
             model="gpt-image-1.5",
             prompt=prompt,
-            size="1536x1024",
+            size=image_size,
             quality="medium"
         )
         image_bytes = base64.b64decode(

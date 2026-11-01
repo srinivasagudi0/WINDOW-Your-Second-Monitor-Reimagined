@@ -5,7 +5,9 @@ openWindowButton.addEventListener("click", async () => {
         scenery: document.getElementById("scenery").value,
         time: document.getElementById("time").value,
         weather: document.getElementById("weather").value,
-        frame: document.getElementById("frame-type").value
+        frame: document.getElementById("frame-type").value,
+        width: window.innerWidth,
+        height: window.innerHeight
     };
     openWindowButton.disabled = true;
     openWindowButton.textContent = "Generating...";
