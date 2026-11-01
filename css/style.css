@@ -1,0 +1,40 @@
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: #0c0c0c;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    font-size: 14px;
+    color: #bcbcbc;
+    margin-top: 8px;
+}
+
+select {
+    width: 100%;
+    padding: 14px;
+    background: #242424;
+    color: white;
+    border: 1px solid #404040;
+    border-radius: 9px;
+    font-size: 15px;
+    cursor: pointer;
+}
