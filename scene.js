@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {EXRLoader} from 'three/addons/loaders/EXRLoader.js';
 
 // 1. Create the 3D scene
 const scene = new THREE.Scene();
@@ -17,14 +18,13 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // 4. Load the 360° forest image
-const loader = new THREE.TextureLoader();
+const loader = new EXRLoader();
 
 loader.load(
-    'assets/environments/nature_reserve_forest_4k.jpeg',
+    'assets/environments/nature_reserve_forest_4k.exr',
 
     function(texture) {
         texture.mapping = THREE.EquirectangularReflectionMapping;
-        texture.colorSpace = THREE.SRGBColorSpace;
         scene.background = texture;
     },
 
