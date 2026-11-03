@@ -4,6 +4,7 @@ import base64
 from pathlib import Path
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import time
 from openai import OpenAI
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -60,6 +61,7 @@ def generate():
         Beautiful immersive environment.
         Fixed camera perspective.
         No people, no text, no window frame.
+        Just for info, it is {time.strftime('%Y-%m-%d %H:%M:%S')} now.
         """
         result = client.images.generate(
             model="gpt-image-1.5",
